@@ -24,6 +24,8 @@ RUN \
 # Install make
 RUN apk add --no-cache make
 
+RUN echo "memory_limit=2048M" > /usr/local/etc/php/conf.d/memory-limit.ini
+
 # Install php extensions
 RUN apk add --no-cache postgresql-dev bash \
     && docker-php-ext-install -j$(nproc) pdo_pgsql

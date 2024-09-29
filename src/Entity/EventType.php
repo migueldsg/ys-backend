@@ -15,4 +15,6 @@ class EventType extends AbstractEnumType
         self::COMMENT => 'Comment',
         self::PULL_REQUEST => 'Pull Request',
     ];
+
+
 }
