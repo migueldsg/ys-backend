@@ -5,15 +5,16 @@ declare(strict_types=1);
 namespace App\Adapter;
 
 use App\Entity\EventType;
+use App\ValueObject\GithubEventTypeValueObject;
 
 class EventTypeAdapter
 {
     private const EVENT_TYPE_MAPPING_ARRAY = [
-        'PushEvent' => EventType::COMMIT,
-        'PullRequestEvent' => EventType::PULL_REQUEST,
-        'IssueCommentEvent' => EventType::COMMENT,
-        'CommitCommentEvent' => EventType::COMMENT,
-        'PullRequestReviewCommentEvent' => EventType::COMMENT
+        GithubEventTypeValueObject::PUSH_EVENT => EventType::COMMIT,
+        GithubEventTypeValueObject::PULL_REQUEST_EVENT => EventType::PULL_REQUEST,
+        GithubEventTypeValueObject::ISSUE_COMMENT_EVENT => EventType::COMMENT,
+        GithubEventTypeValueObject::COMMIT_COMMENT_EVENT => EventType::COMMENT,
+        GithubEventTypeValueObject::PULL_REQUEST_REVIEW_COMMENT_EVENT => EventType::COMMENT
     ];
 
     public static function adapt(?string $importType = null): ?string

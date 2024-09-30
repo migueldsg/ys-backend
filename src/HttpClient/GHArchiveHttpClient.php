@@ -2,7 +2,7 @@
 
 namespace App\HttpClient;
 
-use App\Dto\ResponseDto\GithubEventResponseDto;
+use App\Dto\ResponseDto\EventResponseDto;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -13,11 +13,7 @@ class GHArchiveHttpClient
 {
     private const DATE_QUERY_PARAMETER = '{date}-{hour}.json.gz';
 
-    public function __construct(
-        public readonly HttpClientInterface $ghArchiveClient,
-        public readonly SerializerInterface $serializer,
-        public readonly ValidatorInterface $validator,
-    ) {}
+    public function __construct(public readonly HttpClientInterface $ghArchiveClient) {}
 
     /**
      * @throws \Exception

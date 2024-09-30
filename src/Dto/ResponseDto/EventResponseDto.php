@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace App\Dto\ResponseDto;
 
 use App\Adapter\EventTypeAdapter;
+use App\Entity\EventType;
 use Symfony\Component\Serializer\Annotation\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class GithubEventResponseDto
+class EventResponseDto
 {
     #[
         Assert\Type('integer'),
@@ -23,6 +24,12 @@ class GithubEventResponseDto
     public readonly mixed $type;
 
     #[
+        Assert\Type('integer'),
+        Assert\NotBlank,
+    ]
+    public readonly mixed $count;
+
+    #[
         Assert\Type(ActorResponseDto::class),
         Assert\NotBlank,
     ]
@@ -35,7 +42,7 @@ class GithubEventResponseDto
     public readonly RepoResponseDto $repo;
 
     #[
-        Assert\Type('array'),
+        Assert\Type('string'),
         Assert\NotBlank,
     ]
     public readonly mixed $payload;
@@ -47,9 +54,6 @@ class GithubEventResponseDto
     ]
     public readonly mixed $createAt;
 
-    #[Assert\Type(EventAuthorMessageResponseDto::class)]
-    public readonly ?EventAuthorMessageResponseDto $author;
-
     public function __construct(
         mixed $id,
         mixed $type,
@@ -57,15 +61,15 @@ class GithubEventResponseDto
         RepoResponseDto $repo,
         mixed $payload,
         mixed $createAt,
-        EventAuthorMessageResponseDto $author = null
+        mixed $count = 1
     )
     {
         $this->id = intval($id);
         $this->type = EventTypeAdapter::adapt($type);
         $this->actor = $actor;
         $this->repo = $repo;
-        $this->payload = $payload;
+        $this->payload = json_encode($payload);
         $this->createAt = $createAt;
-        $this->author = $author;
+        $this->count = EventType::COMMIT === $this->type ? $payload['size'] : 1;
     }
 }

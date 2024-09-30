@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Factory;
 
-use App\Dto\ResponseDto\GithubEventResponseDto;
+use App\Dto\ResponseDto\EventResponseDto;
 use App\Entity\Event;
 use DateTimeImmutable;
 
@@ -13,7 +13,7 @@ class EventFactory
     /**
      * @throws \DateMalformedStringException
      */
-    public static function create(GithubEventResponseDto $eventDto): Event
+    public static function create(EventResponseDto $eventDto): Event
     {
         return new Event(
             id: $eventDto->id,
@@ -22,7 +22,7 @@ class EventFactory
             repo: RepoFactory::create($eventDto->repo),
             payload: $eventDto->payload,
             createAt: new DateTimeImmutable($eventDto->createAt),
-            comment: $eventDto?->author?->message
+            comment: null
         );
     }
 }
