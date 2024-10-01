@@ -62,8 +62,7 @@ class EventResponseDto
         mixed $payload,
         mixed $createAt,
         mixed $count = 1
-    )
-    {
+    ) {
         $this->id = intval($id);
         $this->type = EventTypeAdapter::adapt($type);
         $this->actor = $actor;

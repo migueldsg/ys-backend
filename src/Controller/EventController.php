@@ -44,7 +44,7 @@ class EventController
             );
         }
 
-        if($this->readEventRepository->exist($id) === false) {
+        if ($this->readEventRepository->exist($id) === false) {
             return new JsonResponse(
                 ['message' => sprintf('Event identified by %d not found !', $id)],
                 Response::HTTP_NOT_FOUND

@@ -8,7 +8,9 @@ use Doctrine\DBAL\Exception;
 
 class DbalWriteRepoRepository implements WriteRepoRepository
 {
-    public function __construct(private readonly Connection $connection) {}
+    public function __construct(private readonly Connection $connection)
+    {
+    }
 
     /**
      * @param mixed[] $repoList

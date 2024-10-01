@@ -14,7 +14,9 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class GithubEventImportAdapter
 {
-    public function __construct() {}
+    public function __construct()
+    {
+    }
 
     /**
      * @return mixed[]
@@ -22,10 +24,10 @@ class GithubEventImportAdapter
      */
     public function adaptZippedEventIntoArray(string $zippedEventFileContent, SymfonyStyle $io): array
     {
-        $fileName = time().'.json.gz';
-        file_put_contents($fileName, $zippedEventFileContent);
+        $filePath = time().'.json.gz';
+        file_put_contents($filePath, $zippedEventFileContent);
 
-        $fileContent = gzfile($fileName);
+        $fileContent = gzfile($filePath);
         if (false === $fileContent) {
             throw new \Exception();
         }
@@ -54,7 +56,8 @@ class GithubEventImportAdapter
         }
 
         $progressBar->finish();
-        unlink($fileName);
+        unset($fileContent);
+        unlink($filePath);
 
         return $eventList;
     }

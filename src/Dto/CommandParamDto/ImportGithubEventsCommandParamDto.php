@@ -19,7 +19,8 @@ class ImportGithubEventsCommandParamDto
     #[
         Assert\Type('integer'),
         Assert\Range(
-            min: 0, max: 23
+            min: 0,
+            max: 23
         ),
     ]
     public readonly mixed $startHour;
@@ -27,7 +28,8 @@ class ImportGithubEventsCommandParamDto
     #[
         Assert\Type('integer'),
         Assert\Range(
-            min: 0, max: 23
+            min: 0,
+            max: 23
         ),
     ]
     public readonly mixed $endHour;

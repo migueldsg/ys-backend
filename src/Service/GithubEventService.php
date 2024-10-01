@@ -20,7 +20,8 @@ class GithubEventService
         public readonly WriteRepoRepository $writeRepoRepository,
         public readonly WriteActorRepository $writeActorRepository,
         public readonly WriteEventRepository $writeEventRepository,
-    ) {}
+    ) {
+    }
 
     /**
      * @throws TransportExceptionInterface
@@ -47,7 +48,7 @@ class GithubEventService
                 $actorBatch[] = $event['actor'];
                 $eventBatch[] = $event;
 
-                if (count($eventBatch) >= 500) {
+                if (count($eventBatch) >= 5000) {
                     $this->insertEventImportBatches($repoBatch, $actorBatch, $eventBatch);
                     gc_collect_cycles();
 
@@ -64,6 +65,11 @@ class GithubEventService
         }
     }
 
+    /**
+     * @param mixed[] $repoBatch
+     * @param mixed[] $actorBatch
+     * @param mixed[] $eventBatch
+     */
     private function insertEventImportBatches(array $repoBatch, array $actorBatch, array $eventBatch): void
     {
         $this->writeRepoRepository->insertList($repoBatch);

@@ -9,7 +9,9 @@ use Doctrine\DBAL\Exception;
 
 class DbalWriteEventRepository implements WriteEventRepository
 {
-    public function __construct(private readonly Connection $connection) {}
+    public function __construct(private readonly Connection $connection)
+    {
+    }
 
     /**
      * @throws Exception

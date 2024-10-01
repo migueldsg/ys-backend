@@ -13,7 +13,9 @@ class GHArchiveHttpClient
 {
     private const DATE_QUERY_PARAMETER = '{date}-{hour}.json.gz';
 
-    public function __construct(public readonly HttpClientInterface $ghArchiveClient) {}
+    public function __construct(public readonly HttpClientInterface $ghArchiveClient)
+    {
+    }
 
     /**
      * @throws \Exception
