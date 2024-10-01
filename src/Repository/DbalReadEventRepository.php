@@ -80,7 +80,7 @@ SQL;
             'keyword' => $searchInput->keyword,
         ]);
 
-        $result = array_map(static function($item) {
+        $result = array_map(static function ($item) {
             $item['repo'] = json_decode($item['repo'], true);
 
             return $item;
