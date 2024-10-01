@@ -26,7 +26,7 @@ SQL;
     }
 
     /**
-     * @param EventResponseDto[] $eventList
+     * @param mixed[] $eventList
      * @throws Exception
      */
     public function insertList(array $eventList): void
@@ -37,8 +37,16 @@ SQL;
                 $values .= ', ';
             }
 
-            //Really sketchy but running out of time
-            $values .= '('.implode(',', [$event->id, "'".$event->type."'", $event->count, $event->actor->id, $event->repo->id, "'".str_replace("'", '', $event->payload)."'", "'".$event->createAt."'"]).')';
+            $values .= '('.implode(',', [
+                $event['id'],
+                "'".$event['type']."'",
+                $event['count'],
+                $event['actor']['id'],
+                $event['repo']['id'],
+                //Really sketchy but running out of time
+                "'".str_replace("'", '', json_encode($event['payload']))."'",
+                "'".$event['created_at']."'"
+            ]).')';
         }
 
         $sql = <<<SQL

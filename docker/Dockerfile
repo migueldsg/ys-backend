@@ -24,7 +24,7 @@ RUN \
 # Install make
 RUN apk add --no-cache make
 
-RUN echo "memory_limit=2048M" > /usr/local/etc/php/conf.d/memory-limit.ini
+RUN echo "memory_limit=4096M" > /usr/local/etc/php/conf.d/memory-limit.ini
 
 # Install php extensions
 RUN apk add --no-cache postgresql-dev bash \

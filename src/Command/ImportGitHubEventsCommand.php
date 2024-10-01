@@ -11,6 +11,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -42,6 +43,7 @@ class ImportGitHubEventsCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $io = new SymfonyStyle($input, $output);
         try {
             $commandParamDto = $this->denormalizer->denormalize(
                 $input->getArguments(),
@@ -53,11 +55,13 @@ class ImportGitHubEventsCommand extends Command
                 return Command::FAILURE;
             }
 
-            $this->githubEventService->importEvents($commandParamDto, $output);
+            $this->githubEventService->importEvents($commandParamDto, $io);
         } catch (\Exception $exception) {
+            $io->error($exception->getMessage());
             return Command::FAILURE;
         }
 
+        $io->success('Events imported successfully.');
         return Command::SUCCESS;
     }
 }

@@ -10,7 +10,7 @@ interface WriteEventRepository
     public function update(EventInput $authorInput, int $id): void;
 
     /**
-     * @param EventResponseDto[] $eventList
+     * @param mixed[] $eventList
      */
     public function insertList(array $eventList): void;
 }

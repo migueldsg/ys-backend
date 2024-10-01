@@ -11,7 +11,7 @@ class DbalWriteRepoRepository implements WriteRepoRepository
     public function __construct(private readonly Connection $connection) {}
 
     /**
-     * @param RepoResponseDto[] $repoList
+     * @param mixed[] $repoList
      * @throws Exception
      */
     public function insertList(array $repoList): void
@@ -22,7 +22,11 @@ class DbalWriteRepoRepository implements WriteRepoRepository
                 $values .= ', ';
             }
 
-            $values .= '('.implode(',', [$repo->id, "'".$repo->name."'", "'".$repo->url."'"]).')';
+            $values .= '('.implode(',', [
+                $repo['id'],
+                "'".$repo['name']."'",
+                "'".$repo['url']."'"
+            ]).')';
         }
 
         $sql = <<<SQL

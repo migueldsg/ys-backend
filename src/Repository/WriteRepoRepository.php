@@ -7,7 +7,7 @@ use App\Dto\ResponseDto\RepoResponseDto;
 interface WriteRepoRepository
 {
     /**
-     * @param RepoResponseDto[] $repoList
+     * @param mixed[] $repoList
      */
     public function insertList(array $repoList): void;
 }

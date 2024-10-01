@@ -11,7 +11,7 @@ class DbalWriteActorRepository implements WriteActorRepository
     public function __construct(private readonly Connection $connection) {}
 
     /**
-     * @param ActorResponseDto[] $actorList
+     * @param mixed[] $actorList
      * @throws Exception
      */
     public function insertList(array $actorList): void
@@ -21,7 +21,13 @@ class DbalWriteActorRepository implements WriteActorRepository
             if ($index > 0) {
                 $values .= ', ';
             }
-            $values .= '('.implode(',', [$actor->id, "'".$actor->login."'", "'".$actor->url."'", "'".$actor->avatarUrl."'"]).')';
+
+            $values .= '('.implode(',', [
+                $actor['id'],
+                "'".$actor['login']."'",
+                "'".$actor['url']."'",
+                "'".$actor['avatar_url']."'"
+            ]).')';
         }
 
         $sql = <<<SQL

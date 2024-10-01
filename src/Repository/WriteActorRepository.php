@@ -7,7 +7,7 @@ use App\Dto\ResponseDto\ActorResponseDto;
 interface WriteActorRepository
 {
     /**
-     * @param ActorResponseDto[] $actorList
+     * @param mixed[] $actorList
      */
     public function insertList(array $actorList): void;
 }

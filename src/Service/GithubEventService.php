@@ -9,7 +9,7 @@ use App\Repository\WriteActorRepository;
 use App\Repository\WriteEventRepository;
 use App\Repository\WriteRepoRepository;
 use Symfony\Component\Console\Helper\ProgressBar;
-use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class GithubEventService
@@ -26,40 +26,48 @@ class GithubEventService
      * @throws TransportExceptionInterface
      * @throws \Exception
      */
-    public function importEvents(ImportGithubEventsCommandParamDto $commandParamDto, OutputInterface $output): void
+    public function importEvents(ImportGithubEventsCommandParamDto $commandParamDto, SymfonyStyle $io): void
     {
         for ($i = $commandParamDto->startHour; $i <= $commandParamDto->endHour; $i++) {
             $date = $commandParamDto->date->format('Y-m-d');
+            $io->section("Importing Github Event : ".$date." ".$i);
 
             $zippedEventFileContent = $this->ghArchiveHttpClient->getEventsByDate($date, $i);
-            $eventDtoList = $this->githubEventImportAdapter->adaptZippedEventFileIntoDto($zippedEventFileContent, $output);
+            $eventList = $this->githubEventImportAdapter->adaptZippedEventIntoArray($zippedEventFileContent, $io);
+            unset($zippedEventFileContent);
 
             $repoBatch = [];
             $actorBatch = [];
             $eventBatch = [];
-            $progressBar = new ProgressBar($output, count($eventDtoList));
-            foreach ($eventDtoList as $eventDto) {
+            $progressBar = new ProgressBar($io, count($eventList));
+            foreach ($eventList as $event) {
                 $progressBar->advance();
 
-                $repoBatch[] = $eventDto->repo;
-                $actorBatch[] = $eventDto->actor;
-                $eventBatch[] = $eventDto;
+                $repoBatch[] = $event['repo'];
+                $actorBatch[] = $event['actor'];
+                $eventBatch[] = $event;
 
-                if (count($eventBatch) >= 100) {
-                    $this->writeRepoRepository->insertList($repoBatch);
-                    $this->writeActorRepository->insertList($actorBatch);
-                    $this->writeEventRepository->insertList($eventBatch);
+                if (count($eventBatch) >= 500) {
+                    $this->insertEventImportBatches($repoBatch, $actorBatch, $eventBatch);
+                    gc_collect_cycles();
 
                     $repoBatch = [];
                     $actorBatch = [];
-                    $eventBatch = [];        
+                    $eventBatch = [];
                 }
-            }
-            $this->writeRepoRepository->insertList($repoBatch);
-            $this->writeActorRepository->insertList($actorBatch);
-            $this->writeEventRepository->insertList($eventBatch);
 
+                unset($event);
+            }
+
+            $this->insertEventImportBatches($repoBatch, $actorBatch, $eventBatch);
             $progressBar->finish();
         }
+    }
+
+    private function insertEventImportBatches(array $repoBatch, array $actorBatch, array $eventBatch): void
+    {
+        $this->writeRepoRepository->insertList($repoBatch);
+        $this->writeActorRepository->insertList($actorBatch);
+        $this->writeEventRepository->insertList($eventBatch);
     }
 }
